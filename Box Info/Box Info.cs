@@ -68,45 +68,51 @@ namespace cAlgo.Indicators
         #region Params
 
         /// <summary>
+        /// L'identità del prodotto
+        /// </summary>
+        [Parameter(NAME + " " + VERSION, Group = "Identity", DefaultValue = "https://ctrader.guru/product/box-info/")]
+        public string ProductInfo { get; set; }
+
+        /// <summary>
         /// Opzione per la visualizzazione del gross profit
         /// </summary>
-        [Parameter("Show Gross Profit ?", DefaultValue = true)]
+        [Parameter("Show Gross Profit ?", Group = "Options", DefaultValue = true)]
         public bool showGross { get; set; }
 
         /// <summary>
         /// Opzione per la visualizzazione del net profit
         /// </summary>
-        [Parameter("Show Net Profit ?", DefaultValue = true)]
+        [Parameter("Show Net Profit ?", Group = "Options", DefaultValue = true)]
         public bool showNet { get; set; }
 
         /// <summary>
         /// Opzione per la visualizzazione della leva, potrebbe variare
         /// </summary>
-        [Parameter("Show Leverage ?", DefaultValue = true)]
+        [Parameter("Show Leverage ?", Group = "Options", DefaultValue = true)]
         public bool showLeva { get; set; }
 
         /// <summary>
         /// Opzione per la visualizzazione della size esponenziale di antimartingala
         /// </summary>
-        [Parameter("Show Antimartingala ?", DefaultValue = true)]
+        [Parameter("Show Antimartingala ?", Group = "Options", DefaultValue = true)]
         public bool showAntimarty { get; set; }
 
         /// <summary>
         /// Il colore del font
         /// </summary>
-        [Parameter("Color", DefaultValue = "Red")]
+        [Parameter("Color", Group = "Styles", DefaultValue = "Red")]
         public string boxcolor { get; set; }
 
         /// <summary>
         /// Opzione per la posizione del box info in verticale
         /// </summary>
-        [Parameter("Vertical Position", DefaultValue = VerticalAlignment.Top)]
+        [Parameter("Vertical Position", Group = "Styles", DefaultValue = VerticalAlignment.Top)]
         public VerticalAlignment vAlign { get; set; }
 
         /// <summary>
         /// Opzione per la posizione del box info in orizontale
         /// </summary>
-        [Parameter("Horizontal Position", DefaultValue = HorizontalAlignment.Right)]
+        [Parameter("Horizontal Position", Group = "Styles", DefaultValue = HorizontalAlignment.Right)]
         public HorizontalAlignment hAlign { get; set; }
 
         #endregion
