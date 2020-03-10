@@ -96,13 +96,13 @@ namespace cAlgo.Indicators
         /// </summary>
         [Parameter("Show Antimartingala ?", Group = "Options", DefaultValue = true)]
         public bool showAntimarty { get; set; }
-
+        /*
         /// <summary>
         /// Il colore del font
         /// </summary>
         [Parameter("Color", Group = "Styles", DefaultValue = "Red")]
         public string boxcolor { get; set; }
-
+        */
         /// <summary>
         /// Opzione per la posizione del box info in verticale
         /// </summary>
@@ -118,11 +118,6 @@ namespace cAlgo.Indicators
         #endregion
 
         #region Property
-
-        /// <summary>
-        /// Il colore del font scelto
-        /// </summary>
-        Color BoxColor = Color.Red;
 
         /// <summary>
         /// Coefficiente per il calcolo dell'antimartingala
@@ -145,18 +140,6 @@ namespace cAlgo.Indicators
             // --> Se viene settato l'ID effettua un controllo per verificare eventuali aggiornamenti
             _checkProductUpdate();
 
-
-            try
-            {
-
-                // --> Converto il colore del font, potrebbe essere una stringa strana dell'utente
-                BoxColor = Color.FromName(boxcolor);
-
-            }
-            catch
-            { }
-
-
         }
 
         /// <summary>
@@ -169,12 +152,10 @@ namespace cAlgo.Indicators
             // --> Eseguo la logica solo se è l'ultima candela
             if (!IsLastBar) return;
 
-            double[] profits = _getProfitInformation();
-
             // --> Formatto il testo del box
-            string tmpSpread = String.Format("{0:0.0}", Symbol.Spread);
-            string tmpGP = String.Format("{0:0.00}", profits[0]);
-            string tmpNT = String.Format("{0:0.00}", profits[1]);
+            string tmpSpread = String.Format("{0:0.0}", _getSpreadInformation());
+            string tmpGP = String.Format("{0:0.00}", Symbol.UnrealizedGrossProfit);
+            string tmpNT = String.Format("{0:0.00}", Symbol.UnrealizedNetProfit);
 
             string info = String.Format("{0} SPREAD\r\n{1}", SymbolName, tmpSpread);
 
@@ -193,13 +174,24 @@ namespace cAlgo.Indicators
 
             }
 
-            Chart.DrawStaticText("Box", info, vAlign, hAlign, BoxColor);
+            Chart.DrawStaticText("Box", info, vAlign, hAlign, Color.Red);// --> Color.FromName(boxcolor)); // <-- Non va si impalla :)
 
         }
 
         #endregion
 
         #region Private Methods
+
+        /// <summary>
+        /// Restituisce lo spread corrente
+        /// </summary>
+        private double _getSpreadInformation()
+        {
+
+            // --> Restituisco lo spread corrente
+            return Math.Round(Symbol.Spread / Symbol.PipSize, 2);
+
+        }
 
         /// <summary>
         /// Calcola la size per la prossima posizione in antimartingala
@@ -230,39 +222,6 @@ namespace cAlgo.Indicators
             {
                 Math.Round(tsbuy / coeff, 2),
                 Math.Round(tssell / coeff, 2)
-            };
-
-            return result;
-
-        }
-
-        /// <summary>
-        /// Calcola il profitto delle posizioni aperte
-        /// </summary>
-        /// <returns>Restituisce il valore dei profitti</returns>
-        private double[] _getProfitInformation()
-        {
-
-            // --> Raccolgo tutte le operazioni su questo simbolo
-            double ttgp = 0.0;
-            double ttnp = 0.0;
-
-            // --> Faccio la somma
-            var MyPositions = Positions.FindAll("", Symbol.Name);
-
-            foreach (var position in MyPositions)
-            {
-
-                ttgp += position.GrossProfit;
-                ttnp += position.NetProfit;
-
-            }
-
-            // --> Restituisco l'array con le informazioni
-            double[] result =
-            {
-                Math.Round(ttgp, 2),
-                Math.Round(ttnp, 2)
             };
 
             return result;
