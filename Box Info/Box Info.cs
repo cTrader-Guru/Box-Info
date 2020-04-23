@@ -55,7 +55,7 @@ namespace cAlgo.Indicators
         public const int ID = 60510;
 
         /// <summary>
-        /// Nome del prodotto, identificativo, da modificare con il nome della propria creazione
+        /// Nome del prodotto, identificativo, da modificare con il nome della propria creazione 
         /// </summary>
         public const string NAME = "Box Info";
 
