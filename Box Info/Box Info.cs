@@ -1,4 +1,4 @@
-﻿/*  CTRADER GURU --> Template 1.0.3
+﻿/*  CTRADER GURU --> Template 1.0.4
 
     Homepage    : https://ctrader.guru/
     Telegram    : https://t.me/ctraderguru
@@ -11,11 +11,12 @@
 */
 
 using System;
-using System.Collections.Specialized;
+using System.IO;
+using cAlgo.API;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
-using cAlgo.API;
+using System.Collections.Specialized;
 
 // --> Microsoft Visual Studio 2017 --> Strumenti --> Gestione pacchetti NuGet --> Gestisci pacchetti NuGet per la soluzione... --> Installa
 using Newtonsoft.Json;
@@ -61,7 +62,7 @@ namespace cAlgo.Indicators
         /// <summary>
         /// La versione del prodotto, progressivo, utilie per controllare gli aggiornamenti se viene reso disponibile sul sito ctrader.guru
         /// </summary>
-        public const string VERSION = "1.0.6";
+        public const string VERSION = "1.0.8";
 
         #endregion
 
@@ -77,43 +78,43 @@ namespace cAlgo.Indicators
         /// Opzione per la visualizzazione del gross profit
         /// </summary>
         [Parameter("Show Gross Profit ?", Group = "Options", DefaultValue = true)]
-        public bool showGross { get; set; }
+        public bool ShowGross { get; set; }
 
         /// <summary>
         /// Opzione per la visualizzazione del net profit
         /// </summary>
         [Parameter("Show Net Profit ?", Group = "Options", DefaultValue = true)]
-        public bool showNet { get; set; }
+        public bool ShowNet { get; set; }
 
         /// <summary>
         /// Opzione per la visualizzazione della leva, potrebbe variare
         /// </summary>
         [Parameter("Show Leverage ?", Group = "Options", DefaultValue = true)]
-        public bool showLeva { get; set; }
+        public bool ShowLeva { get; set; }
 
         /// <summary>
         /// Opzione per la visualizzazione della size esponenziale di antimartingala
         /// </summary>
         [Parameter("Show Antimartingala ?", Group = "Options", DefaultValue = true)]
-        public bool showAntimarty { get; set; }
-        /*
+        public bool ShowAntimarty { get; set; }
+
         /// <summary>
         /// Il colore del font
         /// </summary>
-        [Parameter("Color", Group = "Styles", DefaultValue = "Red")]
-        public string boxcolor { get; set; }
-        */
+        [Parameter("Color", Group = "Styles", DefaultValue = "DodgerBlue")]
+        public string Boxcolor { get; set; }
+
         /// <summary>
         /// Opzione per la posizione del box info in verticale
         /// </summary>
         [Parameter("Vertical Position", Group = "Styles", DefaultValue = VerticalAlignment.Top)]
-        public VerticalAlignment vAlign { get; set; }
+        public VerticalAlignment VAlign { get; set; }
 
         /// <summary>
         /// Opzione per la posizione del box info in orizontale
         /// </summary>
         [Parameter("Horizontal Position", Group = "Styles", DefaultValue = HorizontalAlignment.Right)]
-        public HorizontalAlignment hAlign { get; set; }
+        public HorizontalAlignment HAlign { get; set; }
 
         #endregion
 
@@ -140,6 +141,10 @@ namespace cAlgo.Indicators
             // --> Se viene settato l'ID effettua un controllo per verificare eventuali aggiornamenti
             _checkProductUpdate();
 
+            // --> L'utente potrebbe aver inserito un colore errato
+            if (Color.FromName(Boxcolor).ToArgb() == 0)
+                Boxcolor = "DodgerBlue";
+
         }
 
         /// <summary>
@@ -150,7 +155,8 @@ namespace cAlgo.Indicators
         {
 
             // --> Eseguo la logica solo se è l'ultima candela
-            if (!IsLastBar) return;
+            if (!IsLastBar)
+                return;
 
             // --> Formatto il testo del box
             string tmpSpread = String.Format("{0:0.0}", _getSpreadInformation());
@@ -159,13 +165,16 @@ namespace cAlgo.Indicators
 
             string info = String.Format("{0} SPREAD\r\n{1}", SymbolName, tmpSpread);
 
-            if (showGross) info += String.Format("\r\n\r\nGROSS PROFIT\r\n{0}", tmpGP);
+            if (ShowGross)
+                info += String.Format("\r\n\r\nGROSS PROFIT\r\n{0}", tmpGP);
 
-            if (showNet) info += String.Format("\r\n\r\nNET PROFIT\r\n{0}", tmpNT);
+            if (ShowNet)
+                info += String.Format("\r\n\r\nNET PROFIT\r\n{0}", tmpNT);
 
-            if (showLeva) info += String.Format("\r\n\r\nLEVERAGE\r\n1:{0}", Account.PreciseLeverage);
+            if (ShowLeva)
+                info += String.Format("\r\n\r\nLEVERAGE\r\n1:{0}", Account.PreciseLeverage);
 
-            if (showAntimarty)
+            if (ShowAntimarty)
             {
 
                 double[] antM = _getAntimarty();
@@ -174,8 +183,8 @@ namespace cAlgo.Indicators
 
             }
 
-            Chart.DrawStaticText("Box", info, vAlign, hAlign, Color.Red);// --> Color.FromName(boxcolor)); // <-- Non va si impalla :)
-
+            Chart.DrawStaticText("BoxInfo", info, VAlign, HAlign, Color.FromName(Boxcolor));
+            // <-- Non va si impalla :)
         }
 
         #endregion
@@ -218,7 +227,7 @@ namespace cAlgo.Indicators
             }
 
             // --> Restituisco l'array con le informazioni
-            double[] result =
+            double[] result = 
             {
                 Math.Round(tsbuy / coeff, 2),
                 Math.Round(tssell / coeff, 2)
@@ -239,10 +248,10 @@ namespace cAlgo.Indicators
                 return;
 
             // --> Organizzo i dati per la richiesta degli aggiornamenti
-            Guru.API.RequestProductInfo Request = new Guru.API.RequestProductInfo
+            Guru.API.RequestProductInfo Request = new Guru.API.RequestProductInfo 
             {
 
-                MyProduct = new Guru.Product
+                MyProduct = new Guru.Product 
                 {
 
                     ID = ID,
@@ -303,6 +312,13 @@ namespace Guru
 
     }
 
+    public class CookieInformation
+    {
+
+        public DateTime LastCheck = new DateTime();
+
+    }
+
     /// <summary>
     /// Offre la possibilità di utilizzare le API messe a disposizione da ctrader.guru per verificare gli aggiornamenti del prodotto.
     /// Permessi utente "AccessRights = AccessRights.FullAccess" per accedere a internet ed utilizzare JSON
@@ -323,6 +339,77 @@ namespace Guru
         /// Variabile dove verranno inserite le direttive per la richiesta
         /// </summary>
         private RequestProductInfo RequestProduct = new RequestProductInfo();
+
+        /// <summary>
+        /// Il percorso della cartella dove riporre i cookie
+        /// </summary>
+        private readonly string _mainpath = string.Format("{0}\\cAlgo\\cTrader GURU\\Cookie", Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));
+
+        /// <summary>
+        /// Il percorso completo del file che verrà utilizzato per il controllo degli aggiornamenti
+        /// </summary>
+        private readonly string _pathsetup;
+
+        /// <summary>
+        /// Legge e rende disponibile i contenuti del cookie
+        /// </summary>
+        /// <returns></returns>
+        private string _loadSetup()
+        {
+
+            try
+            {
+
+                using (StreamReader r = new StreamReader(_pathsetup))
+                {
+                    string json = r.ReadToEnd();
+
+                    return json;
+                }
+
+            }
+            catch
+            {
+
+                return null;
+
+            }
+
+        }
+
+        /// <summary>
+        /// Scrive i valori del cookie
+        /// </summary>
+        /// <param name="mysetup">I valori da registrare</param>
+        /// <returns></returns>
+        private bool _writeSetup(CookieInformation mysetup)
+        {
+
+            try
+            {
+
+                Directory.CreateDirectory(_mainpath);
+
+                using (StreamWriter file = File.CreateText(_pathsetup))
+                {
+
+                    JsonSerializer serializer = new JsonSerializer();
+
+                    serializer.Serialize(file, mysetup);
+
+                }
+
+                return true;
+
+            }
+            catch
+            {
+
+                return false;
+
+            }
+
+        }
 
         /// <summary>
         /// Variabile dove verranno inserite le informazioni identificative dal server dopo l'inizializzazione della classe API
@@ -388,6 +475,50 @@ namespace Guru
             if (Request.MyProduct.ID <= 0)
                 return;
 
+            // --> Rendo disponibile il file del cookie
+            _pathsetup = string.Format("{0}\\{1}.json", _mainpath, Request.MyProduct.ID);
+
+            CookieInformation MySetup = new CookieInformation();
+            DateTime now = DateTime.Now;
+
+            // --> Evito di chiamare il server se non sono passate almeno 24h
+            try
+            {
+
+                string json = _loadSetup();
+
+                if (json != null && json.Trim().Length > 0)
+                {
+
+                    json = json.Trim();
+
+                    MySetup = JsonConvert.DeserializeObject<CookieInformation>(json);
+                    DateTime ExpireDate = MySetup.LastCheck.AddDays(1);
+
+                    // --> Impedisco di controllare se non è passato il tempo necessario
+                    if (now < ExpireDate)
+                    {
+
+                        ProductInfo.Exception = string.Format("Check for updates scheduled for {0}", ExpireDate.ToString());
+                        return;
+
+                    }
+
+                }
+
+            }
+            catch (Exception Exp)
+            {
+
+                // --> Setup corrotto ? resetto!
+                _writeSetup(MySetup);
+
+                // --> Se ci sono errori non controllo perchè non è gestito ed evito di sovraccaricare il server che mi bloccherebbe
+                ProductInfo.Exception = Exp.Message;
+                return;
+
+            }
+
             // --> Dobbiamo supervisionare la chiamata per registrare l'eccexione
             try
             {
@@ -437,6 +568,10 @@ namespace Guru
 
                 // -->>> Nel cBot necessita l'attivazione di "AccessRights = AccessRights.FullAccess"
                 ProductInfo.LastProduct = JsonConvert.DeserializeObject<Product>(ProductInfo.Source);
+
+                // --> Salviamo la sessione
+                MySetup.LastCheck = now;
+                _writeSetup(MySetup);
 
             }
             catch (Exception Exp)
