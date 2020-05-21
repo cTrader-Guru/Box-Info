@@ -22,20 +22,7 @@ namespace cAlgo.Indicators
     {
 
         #region Enums
-
-        /// <summary>
-        /// Enumeratore per scegliere nelle opzioni la posizione del box info
-        /// </summary>
-        public enum MyPosition
-        {
-
-            TopRight,
-            TopLeft,
-            BottomRight,
-            BottomLeft
-
-        }
-
+        
         public enum MyColors
         {
 
@@ -203,7 +190,7 @@ namespace cAlgo.Indicators
         /// <summary>
         /// La versione del prodotto, progressivo, utilie per controllare gli aggiornamenti se viene reso disponibile sul sito ctrader.guru
         /// </summary>
-        public const string VERSION = "1.0.9";
+        public const string VERSION = "1.1.0";
 
         #endregion
 
