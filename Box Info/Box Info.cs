@@ -22,7 +22,7 @@ namespace cAlgo.Indicators
     {
 
         #region Enums
-        
+
         public enum MyColors
         {
 
@@ -190,7 +190,7 @@ namespace cAlgo.Indicators
         /// <summary>
         /// La versione del prodotto, progressivo, utilie per controllare gli aggiornamenti se viene reso disponibile sul sito ctrader.guru
         /// </summary>
-        public const string VERSION = "1.1.0";
+        public const string VERSION = "1.1.1";
 
         #endregion
 
@@ -241,7 +241,7 @@ namespace cAlgo.Indicators
         /// <summary>
         /// Il colore del font
         /// </summary>
-        [Parameter("Color", Group = "Styles", DefaultValue = MyColors.LightBlue)]
+        [Parameter("Color", Group = "Styles", DefaultValue = MyColors.Coral)]
         public MyColors Boxcolor { get; set; }
 
         /// <summary>
@@ -259,7 +259,7 @@ namespace cAlgo.Indicators
         #endregion
 
         #region Property
-        
+
         #endregion
 
         #region Indicator Events
@@ -272,7 +272,7 @@ namespace cAlgo.Indicators
 
             // --> Stampo nei log la versione corrente
             Print("{0} : {1}", NAME, VERSION);
-            
+
         }
 
         /// <summary>
@@ -299,7 +299,7 @@ namespace cAlgo.Indicators
                     _drawBanner(index);
 
                     break;
-                    
+
             }
 
             // <-- Non va si impalla :)
@@ -355,7 +355,8 @@ namespace cAlgo.Indicators
 
         }
 
-        private void _drawBox( int index ) {
+        private void _drawBox(int index)
+        {
 
 
             // --> Formatto il testo del box
@@ -363,7 +364,7 @@ namespace cAlgo.Indicators
             string tmpGP = String.Format("{0:0.00}", Symbol.UnrealizedGrossProfit);
             string tmpNT = String.Format("{0:0.00}", Symbol.UnrealizedNetProfit);
 
-            string info = String.Format("{0} SPREAD\r\n{1}", SymbolName, tmpSpread);
+            string info = String.Format("{0} ( {1} ) SPREAD\r\n{2}", SymbolName, TimeFrame, tmpSpread);
 
             if (ShowGross)
                 info += String.Format("\r\n\r\nGROSS PROFIT\r\n{0}", tmpGP);
@@ -389,13 +390,13 @@ namespace cAlgo.Indicators
 
         private void _drawBanner(int index)
         {
-            
+
             // --> Formatto il testo del box
             string tmpSpread = String.Format("{0:0.0}", _getSpreadInformation());
             string tmpGP = String.Format("{0:0.00}", Symbol.UnrealizedGrossProfit);
             string tmpNT = String.Format("{0:0.00}", Symbol.UnrealizedNetProfit);
 
-            string info = String.Format("{0} / {1}", SymbolName, tmpSpread);
+            string info = String.Format("{0} ( {1} ) / {2}", SymbolName, TimeFrame, tmpSpread);
 
             if (ShowGross)
                 info += String.Format(" / {0}", tmpGP);
