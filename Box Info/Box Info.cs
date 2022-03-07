@@ -190,7 +190,7 @@ namespace cAlgo.Indicators
         /// <summary>
         /// La versione del prodotto, progressivo, utilie per controllare gli aggiornamenti se viene reso disponibile sul sito ctrader.guru
         /// </summary>
-        public const string VERSION = "1.1.2";
+        public const string VERSION = "1.1.3";
 
         #endregion
 
@@ -340,7 +340,8 @@ namespace cAlgo.Indicators
             foreach (var position in Positions)
             {
 
-                if (position.SymbolName != SymbolName || (LabelObserve.Length > 0 && position.Label != LabelObserve)) continue;
+                if (position.SymbolName != SymbolName || (LabelObserve.Length > 0 && position.Label != LabelObserve))
+                    continue;
 
                 if (position.TradeType == TradeType.Buy)
                     tsbuy += position.Quantity;
@@ -353,7 +354,7 @@ namespace cAlgo.Indicators
 
             }
 
-            double[] result =
+            double[] result = 
             {
                 Math.Round(tsbuy / Corff, 2),
                 Math.Round(tssell / Corff, 2),
@@ -377,15 +378,16 @@ namespace cAlgo.Indicators
             string info = String.Format("{0} ( {1}; {2} ) SPREAD\r\n{3}", SymbolName, TimeFrame, whatLabel, tmpSpread);
 
             if (ShowGross)
-                info += String.Format("\r\n\r\nGROSS PROFIT\r\n{0}", boxInfo[2]);
+                info += String.Format("\r\n\r\nGROSS PROFIT\r\n{0:0.00}", boxInfo[2]);
 
             if (ShowNet)
-                info += String.Format("\r\n\r\nNET PROFIT\r\n{0}", boxInfo[3]);
+                info += String.Format("\r\n\r\nNET PROFIT\r\n{0:0.00}", boxInfo[3]);
 
             if (ShowLeva)
                 info += String.Format("\r\n\r\nLEVERAGE\r\n1:{0}", Account.PreciseLeverage);
 
-            if (ShowAntimarty) info += String.Format("\r\n\r\nANTIMARTINGALA\r\nBuy : {0} / Sell : {1}", boxInfo[0], boxInfo[1]);
+            if (ShowAntimarty)
+                info += String.Format("\r\n\r\nANTIMARTINGALA\r\nBuy : {0:0.00} / Sell : {1:0.00}", boxInfo[0], boxInfo[1]);
 
             Chart.DrawStaticText("BoxInfo", info, VAlign, HAlign, Color.FromName(Boxcolor.ToString("G")));
 
@@ -403,15 +405,16 @@ namespace cAlgo.Indicators
             string info = String.Format("{0} ( {1}; {2} ) / {3}", SymbolName, TimeFrame, whatLabel, tmpSpread);
 
             if (ShowGross)
-                info += String.Format(" / {0}", boxInfo[2]);
+                info += String.Format(" / {0:0.00}", boxInfo[2]);
 
             if (ShowNet)
-                info += String.Format(" / {0}", boxInfo[3]);
+                info += String.Format(" / {0:0.00}", boxInfo[3]);
 
             if (ShowLeva)
                 info += String.Format(" / 1:{0}", Account.PreciseLeverage);
 
-            if (ShowAntimarty) info += String.Format(" / Buy : {0} / Sell : {1}", boxInfo[0], boxInfo[1]);
+            if (ShowAntimarty)
+                info += String.Format(" / Buy : {0:0.00} / Sell : {1:0.00}", boxInfo[0], boxInfo[1]);
 
             Chart.DrawStaticText("BoxInfo", info, VAlign, HAlign, Color.FromName(Boxcolor.ToString("G")));
 
