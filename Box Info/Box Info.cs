@@ -190,7 +190,7 @@ namespace cAlgo.Indicators
         /// <summary>
         /// La versione del prodotto, progressivo, utilie per controllare gli aggiornamenti se viene reso disponibile sul sito ctrader.guru
         /// </summary>
-        public const string VERSION = "1.1.3";
+        public const string VERSION = "1.1.4";
 
         #endregion
 
@@ -243,6 +243,9 @@ namespace cAlgo.Indicators
         /// </summary>
         [Parameter("Show Antimartingala ?", Group = "Options", DefaultValue = true)]
         public bool ShowAntimarty { get; set; }
+
+        [Parameter("Show Global DrawDown ?", Group = "Options", DefaultValue = true)]
+        public bool ShowGlobalDrawDown { get; set; }
 
         /// <summary>
         /// Il colore del font
@@ -389,6 +392,9 @@ namespace cAlgo.Indicators
             if (ShowAntimarty)
                 info += String.Format("\r\n\r\nANTIMARTINGALA\r\nBuy : {0:0.00} / Sell : {1:0.00}", boxInfo[0], boxInfo[1]);
 
+            if (ShowGlobalDrawDown)
+                info += String.Format("\r\n\r\nGlobal DrawDown\r\n{0:0.00}%", ( ( Account.Balance - Account.Equity ) * 100 ) / Account.Balance );
+
             Chart.DrawStaticText("BoxInfo", info, VAlign, HAlign, Color.FromName(Boxcolor.ToString("G")));
 
         }
@@ -415,6 +421,9 @@ namespace cAlgo.Indicators
 
             if (ShowAntimarty)
                 info += String.Format(" / Buy : {0:0.00} / Sell : {1:0.00}", boxInfo[0], boxInfo[1]);
+
+            if (ShowGlobalDrawDown)
+                info += String.Format(" / DD {0:0.00}%", ((Account.Balance - Account.Equity) * 100) / Account.Balance);
 
             Chart.DrawStaticText("BoxInfo", info, VAlign, HAlign, Color.FromName(Boxcolor.ToString("G")));
 
