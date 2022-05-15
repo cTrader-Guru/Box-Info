@@ -393,7 +393,7 @@ namespace cAlgo.Indicators
                 info += String.Format("\r\n\r\nANTIMARTINGALA\r\nBuy : {0:0.00} / Sell : {1:0.00}", boxInfo[0], boxInfo[1]);
 
             if (ShowGlobalDrawDown)
-                info += String.Format("\r\n\r\nGlobal DrawDown\r\n{0:0.00}%", ( ( Account.Balance - Account.Equity ) * 100 ) / Account.Balance );
+                info += String.Format("\r\n\r\nGlobal DrawDown\r\n{0:0.00}%", ((Account.Balance - Account.Equity) * 100) / Account.Balance);
 
             Chart.DrawStaticText("BoxInfo", info, VAlign, HAlign, Color.FromName(Boxcolor.ToString("G")));
 
