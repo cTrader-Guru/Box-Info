@@ -199,7 +199,7 @@ namespace cAlgo.Indicators
         /// <summary>
         /// L'identità del prodotto
         /// </summary>
-        [Parameter(NAME + " " + VERSION, Group = "Identity", DefaultValue = "https://ctrader.guru/product/box-info/")]
+        [Parameter(NAME + " " + VERSION, Group = "Identity", DefaultValue = "https://www.google.com/search?q=ctrader+guru+box+info")]
         public string ProductInfo { get; set; }
 
         /// <summary>
