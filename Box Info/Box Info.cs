@@ -11,8 +11,9 @@
 
 using System;
 using cAlgo.API;
-using cAlgo.API.Indicators;
 using cAlgo.API.Internals;
+
+using cTrader.Guru.Helper;
 
 namespace cAlgo.Indicators
 {
@@ -22,153 +23,6 @@ namespace cAlgo.Indicators
     {
 
         #region Enums
-
-        public enum MyColors
-        {
-
-            AliceBlue,
-            AntiqueWhite,
-            Aqua,
-            Aquamarine,
-            Azure,
-            Beige,
-            Bisque,
-            Black,
-            BlanchedAlmond,
-            Blue,
-            BlueViolet,
-            Brown,
-            BurlyWood,
-            CadetBlue,
-            Chartreuse,
-            Chocolate,
-            Coral,
-            CornflowerBlue,
-            Cornsilk,
-            Crimson,
-            Cyan,
-            DarkBlue,
-            DarkCyan,
-            DarkGoldenrod,
-            DarkGray,
-            DarkGreen,
-            DarkKhaki,
-            DarkMagenta,
-            DarkOliveGreen,
-            DarkOrange,
-            DarkOrchid,
-            DarkRed,
-            DarkSalmon,
-            DarkSeaGreen,
-            DarkSlateBlue,
-            DarkSlateGray,
-            DarkTurquoise,
-            DarkViolet,
-            DeepPink,
-            DeepSkyBlue,
-            DimGray,
-            DodgerBlue,
-            Firebrick,
-            FloralWhite,
-            ForestGreen,
-            Fuchsia,
-            Gainsboro,
-            GhostWhite,
-            Gold,
-            Goldenrod,
-            Gray,
-            Green,
-            GreenYellow,
-            Honeydew,
-            HotPink,
-            IndianRed,
-            Indigo,
-            Ivory,
-            Khaki,
-            Lavender,
-            LavenderBlush,
-            LawnGreen,
-            LemonChiffon,
-            LightBlue,
-            LightCoral,
-            LightCyan,
-            LightGoldenrodYellow,
-            LightGray,
-            LightGreen,
-            LightPink,
-            LightSalmon,
-            LightSeaGreen,
-            LightSkyBlue,
-            LightSlateGray,
-            LightSteelBlue,
-            LightYellow,
-            Lime,
-            LimeGreen,
-            Linen,
-            Magenta,
-            Maroon,
-            MediumAquamarine,
-            MediumBlue,
-            MediumOrchid,
-            MediumPurple,
-            MediumSeaGreen,
-            MediumSlateBlue,
-            MediumSpringGreen,
-            MediumTurquoise,
-            MediumVioletRed,
-            MidnightBlue,
-            MintCream,
-            MistyRose,
-            Moccasin,
-            NavajoWhite,
-            Navy,
-            OldLace,
-            Olive,
-            OliveDrab,
-            Orange,
-            OrangeRed,
-            Orchid,
-            PaleGoldenrod,
-            PaleGreen,
-            PaleTurquoise,
-            PaleVioletRed,
-            PapayaWhip,
-            PeachPuff,
-            Peru,
-            Pink,
-            Plum,
-            PowderBlue,
-            Purple,
-            Red,
-            RosyBrown,
-            RoyalBlue,
-            SaddleBrown,
-            Salmon,
-            SandyBrown,
-            SeaGreen,
-            SeaShell,
-            Sienna,
-            Silver,
-            SkyBlue,
-            SlateBlue,
-            SlateGray,
-            Snow,
-            SpringGreen,
-            SteelBlue,
-            Tan,
-            Teal,
-            Thistle,
-            Tomato,
-            Transparent,
-            Turquoise,
-            Violet,
-            Wheat,
-            White,
-            WhiteSmoke,
-            Yellow,
-            YellowGreen
-
-        }
 
         public enum MyBoxType
         {
@@ -182,118 +36,66 @@ namespace cAlgo.Indicators
 
         #region Identity
 
-        /// <summary>
-        /// Nome del prodotto, identificativo, da modificare con il nome della propria creazione 
-        /// </summary>
         public const string NAME = "Box Info";
 
-        /// <summary>
-        /// La versione del prodotto, progressivo, utilie per controllare gli aggiornamenti se viene reso disponibile sul sito ctrader.guru
-        /// </summary>
-        public const string VERSION = "1.1.4";
+        public const string VERSION = "1.1.5";
 
         #endregion
 
         #region Params
 
-        /// <summary>
-        /// L'identità del prodotto
-        /// </summary>
         [Parameter(NAME + " " + VERSION, Group = "Identity", DefaultValue = "https://www.google.com/search?q=ctrader+guru+box+info")]
         public string ProductInfo { get; set; }
 
-        /// <summary>
-        /// Cosa controllare per la coppia corrente
-        /// </summary>
         [Parameter("Label (empty = all)", Group = "Params", DefaultValue = "")]
         public string LabelObserve { get; set; }
 
-        /// <summary>
-        /// La percentuale di incremento dell'antimartingala
-        /// </summary>
         [Parameter("Antimartingala K%", Group = "Params", DefaultValue = 2.15)]
         public double Corff { get; set; }
 
-        /// <summary>
-        /// Opzione per la visualizzazione del pannello informazioni
-        /// </summary>
         [Parameter("Panel type ?", Group = "Options", DefaultValue = MyBoxType.Banner)]
         public MyBoxType PanelType { get; set; }
 
-        /// <summary>
-        /// Opzione per la visualizzazione del gross profit
-        /// </summary>
         [Parameter("Show Gross Profit ?", Group = "Options", DefaultValue = true)]
         public bool ShowGross { get; set; }
 
-        /// <summary>
-        /// Opzione per la visualizzazione del net profit
-        /// </summary>
         [Parameter("Show Net Profit ?", Group = "Options", DefaultValue = true)]
         public bool ShowNet { get; set; }
 
-        /// <summary>
-        /// Opzione per la visualizzazione della leva, potrebbe variare
-        /// </summary>
         [Parameter("Show Leverage ?", Group = "Options", DefaultValue = true)]
         public bool ShowLeva { get; set; }
 
-        /// <summary>
-        /// Opzione per la visualizzazione della size esponenziale di antimartingala
-        /// </summary>
         [Parameter("Show Antimartingala ?", Group = "Options", DefaultValue = true)]
         public bool ShowAntimarty { get; set; }
 
-        [Parameter("Show Global DrawDown ?", Group = "Options", DefaultValue = true)]
-        public bool ShowGlobalDrawDown { get; set; }
+        [Parameter("Show Equity %", Group = "Options", DefaultValue = true)]
+        public bool ShowEquityPercentage { get; set; }
 
-        /// <summary>
-        /// Il colore del font
-        /// </summary>
-        [Parameter("Color", Group = "Styles", DefaultValue = MyColors.Coral)]
-        public MyColors Boxcolor { get; set; }
+        [Parameter("Color", Group = "Styles", DefaultValue = ColorFromEnum.ColorNameEnum.Coral)]
+        public ColorFromEnum.ColorNameEnum Boxcolor { get; set; }
 
-        /// <summary>
-        /// Opzione per la posizione del box info in verticale
-        /// </summary>
         [Parameter("Vertical Position", Group = "Styles", DefaultValue = VerticalAlignment.Top)]
         public VerticalAlignment VAlign { get; set; }
 
-        /// <summary>
-        /// Opzione per la posizione del box info in orizontale
-        /// </summary>
         [Parameter("Horizontal Position", Group = "Styles", DefaultValue = HorizontalAlignment.Left)]
         public HorizontalAlignment HAlign { get; set; }
 
         #endregion
 
-        #region Property
-
-        #endregion
-
         #region Indicator Events
 
-        /// <summary>
-        /// Eseguito all'avvio dell'indicatore
-        /// </summary>
         protected override void Initialize()
         {
 
-            // --> Stampo nei log la versione corrente
             Print("{0} : {1}", NAME, VERSION);
 
             LabelObserve = LabelObserve.Trim();
 
         }
 
-        /// <summary>
-        /// Eseguito ad ogni tick
-        /// </summary>
-        /// <param name="index">L'indice della candela corrente</param>
         public override void Calculate(int index)
         {
 
-            // --> Eseguo la logica solo se è l'ultima candela
             if (!IsLastBar)
                 return;
 
@@ -313,20 +115,15 @@ namespace cAlgo.Indicators
 
             }
 
-            // <-- Non va si impalla :)
         }
 
         #endregion
 
         #region Private Methods
 
-        /// <summary>
-        /// Restituisce lo spread corrente
-        /// </summary>
         private double _getSpreadInformation()
         {
 
-            // --> Restituisco lo spread corrente
             return Math.Round(Symbol.Spread / Symbol.PipSize, 2);
 
         }
@@ -375,7 +172,6 @@ namespace cAlgo.Indicators
             double[] boxInfo = _getBoxInfo();
             string whatLabel = LabelObserve.Length > 0 ? LabelObserve : "All";
 
-            // --> Formatto il testo del box
             string tmpSpread = String.Format("{0:0.0}", _getSpreadInformation());
 
             string info = String.Format("{0} ( {1}; {2} ) SPREAD\r\n{3}", SymbolName, TimeFrame, whatLabel, tmpSpread);
@@ -392,10 +188,12 @@ namespace cAlgo.Indicators
             if (ShowAntimarty)
                 info += String.Format("\r\n\r\nANTIMARTINGALA\r\nBuy : {0:0.00} / Sell : {1:0.00}", boxInfo[0], boxInfo[1]);
 
-            if (ShowGlobalDrawDown)
-                info += String.Format("\r\n\r\nGlobal DrawDown\r\n{0:0.00}%", ((Account.Balance - Account.Equity) * 100) / Account.Balance);
+            double MyEquity = Account.Balance + boxInfo[3];
 
-            Chart.DrawStaticText("BoxInfo", info, VAlign, HAlign, Color.FromName(Boxcolor.ToString("G")));
+            if (ShowEquityPercentage)
+                info += String.Format("\r\n\r\nEquity %\r\n{0:0.00}%", ((MyEquity - Account.Balance) * 100) / MyEquity);
+
+            Chart.DrawStaticText("BoxInfo", info, VAlign, HAlign, ColorFromEnum.GetColor(Boxcolor));
 
         }
 
@@ -405,7 +203,6 @@ namespace cAlgo.Indicators
             double[] boxInfo = _getBoxInfo();
             string whatLabel = LabelObserve.Length > 0 ? LabelObserve : "All";
 
-            // --> Formatto il testo del box
             string tmpSpread = String.Format("{0:0.0}", _getSpreadInformation());
 
             string info = String.Format("{0} ( {1}; {2} ) / {3}", SymbolName, TimeFrame, whatLabel, tmpSpread);
@@ -422,10 +219,12 @@ namespace cAlgo.Indicators
             if (ShowAntimarty)
                 info += String.Format(" / Buy : {0:0.00} / Sell : {1:0.00}", boxInfo[0], boxInfo[1]);
 
-            if (ShowGlobalDrawDown)
-                info += String.Format(" / DD {0:0.00}%", ((Account.Balance - Account.Equity) * 100) / Account.Balance);
+            double MyEquity = Account.Balance + boxInfo[3];
 
-            Chart.DrawStaticText("BoxInfo", info, VAlign, HAlign, Color.FromName(Boxcolor.ToString("G")));
+            if (ShowEquityPercentage)
+                info += String.Format(" / EQ {0:0.00}%", ((MyEquity - Account.Balance) * 100) / MyEquity);
+
+            Chart.DrawStaticText("BoxInfo", info, VAlign, HAlign, ColorFromEnum.GetColor(Boxcolor));
 
         }
 
