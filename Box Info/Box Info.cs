@@ -1,4 +1,4 @@
-﻿/*  CTRADER GURU --> Indicator Template 1.0.8
+/*  CTRADER GURU --> Indicator Template 1.0.8
 
     Homepage    : https://ctrader.guru/
     Telegram    : https://t.me/ctraderguru
@@ -68,7 +68,7 @@ namespace cAlgo.Indicators
         [Parameter("Show Antimartingala ?", Group = "Options", DefaultValue = true)]
         public bool ShowAntimarty { get; set; }
 
-        [Parameter("Show Equity %", Group = "Options", DefaultValue = true)]
+        [Parameter("Show Equity % ?", Group = "Options", DefaultValue = true)]
         public bool ShowEquityPercentage { get; set; }
 
         [Parameter("Color", Group = "Styles", DefaultValue = ColorFromEnum.ColorNameEnum.Coral)]
