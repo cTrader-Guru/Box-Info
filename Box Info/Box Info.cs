@@ -38,7 +38,7 @@ namespace cAlgo.Indicators
 
         public const string NAME = "Box Info";
 
-        public const string VERSION = "1.1.5";
+        public const string VERSION = "1.1.6";
 
         #endregion
 
@@ -154,7 +154,7 @@ namespace cAlgo.Indicators
 
             }
 
-            double[] result = 
+            double[] result =
             {
                 Math.Round(tsbuy / Corff, 2),
                 Math.Round(tssell / Corff, 2),
@@ -191,7 +191,7 @@ namespace cAlgo.Indicators
             double MyEquity = Account.Balance + boxInfo[3];
 
             if (ShowEquityPercentage)
-                info += String.Format("\r\n\r\nEquity %\r\n{0:0.00}%", ((MyEquity - Account.Balance) * 100) / MyEquity);
+                info += String.Format("\r\n\r\nEquity %\r\n{0:0.00}%", CalculateDrawdownPercent(MyEquity, Account.Balance));
 
             Chart.DrawStaticText("BoxInfo", info, VAlign, HAlign, ColorFromEnum.GetColor(Boxcolor));
 
@@ -222,11 +222,19 @@ namespace cAlgo.Indicators
             double MyEquity = Account.Balance + boxInfo[3];
 
             if (ShowEquityPercentage)
-                info += String.Format(" / EQ {0:0.00}%", ((MyEquity - Account.Balance) * 100) / MyEquity);
+                info += String.Format(" / EQ {0:0.00}%", CalculateDrawdownPercent(MyEquity, Account.Balance));
 
             Chart.DrawStaticText("BoxInfo", info, VAlign, HAlign, ColorFromEnum.GetColor(Boxcolor));
 
         }
+
+        public double CalculateDrawdownPercent(double equity, double balance)
+        {
+            double drawdown = equity - balance;
+            return drawdown / equity * 100;
+
+        }
+
 
         #endregion
 
