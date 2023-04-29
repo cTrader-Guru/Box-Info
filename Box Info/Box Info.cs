@@ -228,12 +228,7 @@ namespace cAlgo.Indicators
 
         }
 
-        public double CalculateDrawdownPercent(double equity, double balance)
-        {
-            double drawdown = equity - balance;
-            return drawdown / equity * 100;
-
-        }
+        public double CalculateDrawdownPercent(double equity, double balance) => (equity - balance) / balance * 100;
 
 
         #endregion
